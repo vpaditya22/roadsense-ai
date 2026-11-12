@@ -40,7 +40,7 @@ GitHub Actions runs the test suite, compile check and Streamlit health check on 
 - **Explainable priority:** weighted score from severity (35%), traffic exposure (20%), safety risk (25%), time waiting (10%) and vulnerable road-user context (10%). Review the factors and thresholds in the app.
 - **Municipal dashboard:** open/urgent/resolved counts, backlog by status, triage queue and issue/status filters.
 - **Workflow:** update report status and community feedback; changes are in-session only.
-- **Prototype image boundary:** image upload is available to demonstrate report capture. Images are not sent to a server, stored or classified. No model accuracy is claimed.
+- **Prototype image boundary:** image upload is available to demonstrate report capture. The active Streamlit server receives the image in session memory; this prototype does not write it to disk or a database and does not classify it. No model accuracy is claimed.
 
 ## Architecture
 
@@ -65,7 +65,7 @@ See [Product requirements](docs/PRD.md) and [Product case study](docs/CASE_STUDY
 ## Privacy and accessibility
 
 - The form does not ask for a name, phone number or account.
-- Reports and selected image bytes are not persisted by this prototype. Do not submit sensitive photos or real personal information.
+- Report details remain in session state. An optional photo is received by the active Streamlit server in session memory, but is not saved to disk or a database; both are lost when the session ends. Do not submit sensitive photos or real personal information.
 - Production would need informed consent, data minimization, secure image handling, location precision controls, retention/deletion rules and role-based access.
 - Controls use labels and text status in addition to color. A production map should have a fully equivalent searchable list, keyboard-accessible map interactions, screen-reader descriptions, localization and field testing with people with disabilities.
 

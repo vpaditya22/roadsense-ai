@@ -105,7 +105,7 @@ def render_report_form() -> None:
         lat = c1.number_input("Latitude (demo area)", min_value=22.60, max_value=22.85, value=22.7196, format="%.5f", help="Approximate Indore coordinates for the prototype")
         lon = c2.number_input("Longitude (demo area)", min_value=75.75, max_value=75.95, value=75.8577, format="%.5f")
         description = st.text_area("What should the repair team know?", max_chars=300, placeholder="Describe the damage or any immediate safety concern.")
-        photo = st.file_uploader("Add a photo (optional)", type=["jpg", "jpeg", "png"], help="Prototype only: the image is not uploaded to a server or analyzed by a model.")
+        photo = st.file_uploader("Add a photo (optional)", type=["jpg", "jpeg", "png"], help="The active Streamlit server receives the image in session memory. This prototype does not save or analyze it.")
         consent = st.checkbox("I understand this portfolio prototype stores my report only in this browser session.")
         submit = st.form_submit_button("Submit report", type="primary")
     if submit:

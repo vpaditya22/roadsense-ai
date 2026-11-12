@@ -33,7 +33,7 @@ Production intake, authentication, city GIS integration, dispatch/work orders, g
 - A rule-based score is legible and testable for an MVP; a learned ranker would require representative labeled history and fairness review.
 - The demo map is centered on Indore to connect the portfolio project to civil engineering field experience; points are illustrative, not verified locations.
 - Session state makes the reporting loop demonstrable without collecting personal data. It also means reports disappear when the session ends.
-- Photos are accepted by the interface for the reporting flow but are not persisted or analyzed. Avoiding a heavyweight model keeps setup simple and avoids implying unsupported accuracy.
+- Photos are received by the active Streamlit server in session memory for the reporting flow but are not persisted or analyzed. Avoiding a heavyweight model keeps setup simple and avoids implying unsupported accuracy.
 - Severity, traffic, safety, age and vulnerable-user weights are product hypotheses. A municipal engineer and policy owner would need to calibrate them.
 
 ## Success metrics
