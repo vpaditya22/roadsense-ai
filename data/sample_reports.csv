@@ -1,0 +1,11 @@
+report_id,issue_type,road_name,latitude,longitude,severity,traffic,safety_risk,age_days,vulnerable_users,status,feedback,reported_at,description
+RS-1042,Pothole,Ring Road near Vijay Nagar,22.7534,75.8937,5,5,5,12,true,New,Awaiting confirmation,2026-10-30,"Large pothole in a busy lane"
+RS-1038,Cracking,AB Road near Palasia,22.7238,75.8872,3,5,3,18,false,Assigned,Still present,2026-10-24,"Long cracks across road surface"
+RS-1035,Waterlogging,Khajrana Main Road,22.7193,75.9060,4,3,4,9,true,In progress,Needs follow-up,2026-11-02,"Water collects near the crossing"
+RS-1031,Broken surface,Airport Road,22.7322,75.8015,4,4,3,21,false,New,Awaiting confirmation,2026-10-21,"Uneven surface after utility work"
+RS-1027,Pothole,Annapurna Road,22.6932,75.8261,2,3,2,6,false,Resolved,Confirmed resolved,2026-11-06,"Small pothole near bus stop"
+RS-1024,Cracking,MR-10 Service Lane,22.7577,75.9235,3,4,3,27,true,Assigned,Still present,2026-10-12,"Surface cracks approaching school"
+RS-1019,Pothole,Rau-Pithampur Road,22.6494,75.7941,5,4,5,4,false,In progress,Awaiting confirmation,2026-11-04,"Deep pothole reported by commuter"
+RS-1014,Broken surface,Geeta Bhawan Square,22.7190,75.8765,2,5,2,15,false,Resolved,Confirmed resolved,2026-10-26,"Rough patch on approach"
+RS-1008,Waterlogging,Scheme 78 Connector,22.7462,75.9122,3,3,3,11,true,New,Needs follow-up,2026-10-31,"Drain appears blocked near footpath"
+RS-1003,Pothole,Bypass service road,22.6903,75.8775,4,4,5,29,false,Assigned,Still present,2026-10-13,"Damage near merge point"
