@@ -50,7 +50,7 @@ def render_dashboard(reports: pd.DataFrame) -> None:
     k1.metric("Open reports", open_count, help="Synthetic sample plus reports submitted in this session")
     k2.metric("Urgent triage", urgent_count, help="Rule-based score of 70 or higher")
     k3.metric("Resolved", resolved_count)
-    k4.metric("Median open age", f"{avg_age} days", help="Mean age for this demo; synthetic data")
+    k4.metric("Average open age", f"{avg_age} days", help="Mean age for this demo; synthetic data")
 
     left, right = st.columns([1.55, 1])
     with left:
