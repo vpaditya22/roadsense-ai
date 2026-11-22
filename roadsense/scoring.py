@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 
 @dataclass(frozen=True)
@@ -26,16 +27,34 @@ def score_priority(
     engineering assessment or an automated work order.
     """
     values = {"severity": severity, "traffic": traffic, "safety_risk": safety_risk}
-    if any(not 1 <= value <= 5 for value in values.values()):
-        raise ValueError("Severity, traffic, and safety risk must be between 1 and 5.")
-    if age_days < 0:
-        raise ValueError("age_days cannot be negative.")
+    normalized_inputs = {}
+    for name, value in values.items():
+        if isinstance(value, bool):
+            raise ValueError("Severity, traffic, and safety risk must be whole numbers between 1 and 5.")
+        try:
+            numeric_value = float(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Severity, traffic, and safety risk must be whole numbers between 1 and 5.") from exc
+        if not math.isfinite(numeric_value) or not numeric_value.is_integer() or not 1 <= numeric_value <= 5:
+            raise ValueError("Severity, traffic, and safety risk must be whole numbers between 1 and 5.")
+        normalized_inputs[name] = int(numeric_value)
+
+    if isinstance(age_days, bool):
+        raise ValueError("age_days must be a non-negative whole number.")
+    try:
+        numeric_age = float(age_days)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("age_days must be a non-negative whole number.") from exc
+    if not math.isfinite(numeric_age) or not numeric_age.is_integer() or numeric_age < 0:
+        raise ValueError("age_days must be a non-negative whole number.")
+    if not isinstance(vulnerable_users, bool):
+        raise ValueError("vulnerable_users must be a boolean.")
 
     normalized = {
-        "severity": round((severity - 1) / 4 * 35),
-        "traffic": round((traffic - 1) / 4 * 20),
-        "safety_risk": round((safety_risk - 1) / 4 * 25),
-        "report_age": round(min(age_days, 30) / 30 * 10),
+        "severity": round((normalized_inputs["severity"] - 1) / 4 * 35),
+        "traffic": round((normalized_inputs["traffic"] - 1) / 4 * 20),
+        "safety_risk": round((normalized_inputs["safety_risk"] - 1) / 4 * 25),
+        "report_age": round(min(int(numeric_age), 30) / 30 * 10),
         "vulnerable_users": 10 if vulnerable_users else 0,
     }
     score = min(100, sum(normalized.values()))
