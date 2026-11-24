@@ -42,10 +42,17 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     report_id = report["report_id"]
     if not isinstance(report_id, str) or not report_id.strip():
         raise ValueError("Report ID must be a non-empty string.")
-    if "report_id" in reports.columns and reports["report_id"].eq(report_id).any():
+    normalized_id = report_id.strip()
+    existing_ids = (
+        reports["report_id"].dropna().astype(str).str.strip().str.casefold()
+        if "report_id" in reports.columns
+        else pd.Series(dtype="object")
+    )
+    if existing_ids.eq(normalized_id.casefold()).any():
         raise ValueError(f"Report ID already exists: {report_id}")
 
     normalized_report = dict(report)
+    normalized_report["report_id"] = normalized_id
     for field, lower, upper in (
         ("latitude", -90.0, 90.0),
         ("longitude", -180.0, 180.0),

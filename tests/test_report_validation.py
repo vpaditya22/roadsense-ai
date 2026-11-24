@@ -54,3 +54,22 @@ def test_add_report_accepts_and_normalizes_numeric_coordinate_strings():
 
     assert added.iloc[0]["latitude"] == 22.72
     assert added.iloc[0]["longitude"] == 75.85
+
+@pytest.mark.parametrize("duplicate_id", ["RS-TEST", " rs-test ", "RS-TEST "])
+def test_add_report_rejects_ids_that_duplicate_after_trimming_and_casefolding(duplicate_id):
+    reports = load_reports()
+    reports.loc[len(reports)] = {**_valid_report(), "report_id": "RS-TEST"}
+    report = _valid_report()
+    report["report_id"] = duplicate_id
+
+    with pytest.raises(ValueError, match="Report ID already exists"):
+        add_report(reports, report)
+
+
+def test_add_report_trims_new_report_ids():
+    report = _valid_report()
+    report["report_id"] = "  RS-TRIMMED  "
+
+    added = add_report(load_reports(), report)
+
+    assert added.iloc[0]["report_id"] == "RS-TRIMMED"
