@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -44,6 +45,24 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     if "report_id" in reports.columns and reports["report_id"].eq(report_id).any():
         raise ValueError(f"Report ID already exists: {report_id}")
 
-    new_row = pd.DataFrame([report])
+    normalized_report = dict(report)
+    for field, lower, upper in (
+        ("latitude", -90.0, 90.0),
+        ("longitude", -180.0, 180.0),
+    ):
+        value = report[field]
+        if isinstance(value, bool):
+            raise ValueError(f"{field} must be finite and between {lower:g} and {upper:g}.")
+        try:
+            coordinate = float(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"{field} must be finite and between {lower:g} and {upper:g}."
+            ) from exc
+        if not math.isfinite(coordinate) or not lower <= coordinate <= upper:
+            raise ValueError(f"{field} must be finite and between {lower:g} and {upper:g}.")
+        normalized_report[field] = coordinate
+
+    new_row = pd.DataFrame([normalized_report])
     new_row["priority"] = new_row.apply(_score_row, axis=1)
     return pd.concat([new_row, reports], ignore_index=True)
