@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from roadsense.data import add_report, load_reports
+from roadsense.data import add_report, load_reports, new_report_id
 
 
 def _valid_report():
@@ -100,3 +100,10 @@ def test_add_report_trims_descriptive_text_and_rejects_overlong_description():
     report["description"] = "x" * 301
     with pytest.raises(ValueError, match="300 characters or fewer"):
         add_report(load_reports(), report)
+
+
+def test_new_report_ids_are_unique_and_keep_the_demo_prefix():
+    identifiers = {new_report_id() for _ in range(100)}
+
+    assert len(identifiers) == 100
+    assert all(identifier.startswith("RS-") for identifier in identifiers)

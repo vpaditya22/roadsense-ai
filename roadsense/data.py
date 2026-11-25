@@ -4,10 +4,16 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
+from uuid import uuid4
 
 import pandas as pd
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "sample_reports.csv"
+
+
+def new_report_id() -> str:
+    """Create a session-local display identifier with protection from collisions."""
+    return f"RS-{uuid4().hex[:12].upper()}"
 
 
 def load_reports(path: Path = DATA_PATH) -> pd.DataFrame:

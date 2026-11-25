@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from roadsense.data import add_report
+from roadsense.data import add_report, new_report_id
 from roadsense.scoring import score_priority
 
 STATUS_ORDER = ["New", "Assigned", "In progress", "Resolved"]
@@ -116,7 +116,7 @@ def render_report_form() -> None:
             st.error("Please confirm how this prototype handles your report.")
             return
         severity = {"Minor": 2, "Moderate": 3, "Severe": 5}[severity_label]
-        report_id = f"RS-{datetime.now().strftime('%y%m%d%H%M%S')}"
+        report_id = new_report_id()
         report = {"report_id": report_id, "issue_type": issue, "road_name": location.strip(), "latitude": lat, "longitude": lon,
                   "severity": severity, "traffic": 3, "safety_risk": 4 if severity == 5 else 2, "age_days": 0,
                   "vulnerable_users": False, "status": "New", "feedback": "Awaiting confirmation",
