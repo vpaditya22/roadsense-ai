@@ -39,6 +39,16 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     missing = required_fields - set(report)
     if missing:
         raise ValueError(f"Report is missing required fields: {', '.join(sorted(missing))}")
+
+    normalized_report = dict(report)
+    for field in ("issue_type", "road_name", "description"):
+        value = report[field]
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{field} must be a non-empty string.")
+        normalized_report[field] = value.strip()
+    if len(normalized_report["description"]) > 300:
+        raise ValueError("description must be 300 characters or fewer.")
+
     report_id = report["report_id"]
     if not isinstance(report_id, str) or not report_id.strip():
         raise ValueError("Report ID must be a non-empty string.")
@@ -51,7 +61,6 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     if existing_ids.eq(normalized_id.casefold()).any():
         raise ValueError(f"Report ID already exists: {report_id}")
 
-    normalized_report = dict(report)
     normalized_report["report_id"] = normalized_id
     for field, lower, upper in (
         ("latitude", -90.0, 90.0),

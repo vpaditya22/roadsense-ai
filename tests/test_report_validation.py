@@ -73,3 +73,30 @@ def test_add_report_trims_new_report_ids():
     added = add_report(load_reports(), report)
 
     assert added.iloc[0]["report_id"] == "RS-TRIMMED"
+
+
+@pytest.mark.parametrize("field", ["issue_type", "road_name", "description"])
+@pytest.mark.parametrize("value", ["", "   ", None])
+def test_add_report_rejects_blank_or_non_text_descriptions(field, value):
+    report = _valid_report()
+    report[field] = value
+
+    with pytest.raises(ValueError, match=field):
+        add_report(load_reports(), report)
+
+
+def test_add_report_trims_descriptive_text_and_rejects_overlong_description():
+    report = _valid_report()
+    report["issue_type"] = "  Pothole  "
+    report["road_name"] = "  Test Road  "
+    report["description"] = "  Uneven surface  "
+
+    added = add_report(load_reports(), report)
+
+    assert added.iloc[0]["issue_type"] == "Pothole"
+    assert added.iloc[0]["road_name"] == "Test Road"
+    assert added.iloc[0]["description"] == "Uneven surface"
+
+    report["description"] = "x" * 301
+    with pytest.raises(ValueError, match="300 characters or fewer"):
+        add_report(load_reports(), report)
