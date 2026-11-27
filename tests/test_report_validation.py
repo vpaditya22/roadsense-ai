@@ -1,6 +1,7 @@
 from copy import deepcopy
 
 import pytest
+import pandas as pd
 
 from roadsense.data import add_report, load_reports, new_report_id
 
@@ -100,6 +101,23 @@ def test_add_report_trims_descriptive_text_and_rejects_overlong_description():
     report["description"] = "x" * 301
     with pytest.raises(ValueError, match="300 characters or fewer"):
         add_report(load_reports(), report)
+
+
+@pytest.mark.parametrize("reported_at", ["not-a-date", "", None, float("nan")])
+def test_add_report_rejects_invalid_reported_at(reported_at):
+    report = _valid_report()
+    report["reported_at"] = reported_at
+
+    with pytest.raises(ValueError, match="reported_at"):
+        add_report(load_reports(), report)
+
+
+def test_add_report_normalizes_reported_at_to_timestamp():
+    report = _valid_report()
+
+    added = add_report(load_reports(), report)
+
+    assert added.iloc[0]["reported_at"] == pd.Timestamp("2026-11-24")
 
 
 def test_new_report_ids_are_unique_and_keep_the_demo_prefix():

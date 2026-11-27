@@ -55,6 +55,14 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     if len(normalized_report["description"]) > 300:
         raise ValueError("description must be 300 characters or fewer.")
 
+    try:
+        reported_at = pd.Timestamp(report["reported_at"])
+    except (TypeError, ValueError) as exc:
+        raise ValueError("reported_at must be a valid date or timestamp.") from exc
+    if pd.isna(reported_at):
+        raise ValueError("reported_at must be a valid date or timestamp.")
+    normalized_report["reported_at"] = reported_at
+
     report_id = report["report_id"]
     if not isinstance(report_id, str) or not report_id.strip():
         raise ValueError("Report ID must be a non-empty string.")
