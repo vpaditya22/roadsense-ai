@@ -120,6 +120,18 @@ def test_add_report_normalizes_reported_at_to_timestamp():
     assert added.iloc[0]["reported_at"] == pd.Timestamp("2026-11-24")
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("status", "Closed"), ("status", ""), ("feedback", "Resolved"), ("feedback", "")],
+)
+def test_add_report_rejects_unsupported_workflow_values(field, value):
+    report = _valid_report()
+    report[field] = value
+
+    with pytest.raises(ValueError, match=field):
+        add_report(load_reports(), report)
+
+
 def test_new_report_ids_are_unique_and_keep_the_demo_prefix():
     identifiers = {new_report_id() for _ in range(100)}
 

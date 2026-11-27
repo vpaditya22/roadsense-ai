@@ -9,6 +9,13 @@ from uuid import uuid4
 import pandas as pd
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "sample_reports.csv"
+REPORT_STATUSES = {"New", "Assigned", "In progress", "Resolved"}
+COMMUNITY_FEEDBACK = {
+    "Awaiting confirmation",
+    "Confirmed resolved",
+    "Still present",
+    "Needs follow-up",
+}
 
 
 def new_report_id() -> str:
@@ -54,6 +61,14 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
         normalized_report[field] = value.strip()
     if len(normalized_report["description"]) > 300:
         raise ValueError("description must be 300 characters or fewer.")
+    for field, allowed in (
+        ("status", REPORT_STATUSES),
+        ("feedback", COMMUNITY_FEEDBACK),
+    ):
+        value = report[field]
+        if not isinstance(value, str) or value.strip() not in allowed:
+            raise ValueError(f"{field} must be one of the supported report workflow values.")
+        normalized_report[field] = value.strip()
 
     try:
         reported_at = pd.Timestamp(report["reported_at"])
