@@ -50,6 +50,8 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
     }
     if not isinstance(report, dict):
         raise ValueError("Report must be provided as a dictionary.")
+    if not isinstance(reports, pd.DataFrame):
+        raise ValueError("Existing reports must be provided as a pandas DataFrame.")
     missing = required_fields - set(report)
     if missing:
         raise ValueError(f"Report is missing required fields: {', '.join(sorted(missing))}")

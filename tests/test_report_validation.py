@@ -89,6 +89,11 @@ def test_add_report_trims_new_report_ids():
     assert added.iloc[0]["report_id"] == "RS-TRIMMED"
 
 
+def test_add_report_rejects_non_dataframe_existing_store():
+    with pytest.raises(ValueError, match="Existing reports.*DataFrame"):
+        add_report([], _valid_report())
+
+
 @pytest.mark.parametrize("field", ["issue_type", "road_name", "description"])
 @pytest.mark.parametrize("value", ["", "   ", None])
 def test_add_report_rejects_blank_or_non_text_descriptions(field, value):
