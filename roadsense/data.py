@@ -10,6 +10,7 @@ import pandas as pd
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "sample_reports.csv"
 REPORT_STATUSES = {"New", "Assigned", "In progress", "Resolved"}
+DEMO_COORDINATE_BOUNDS = {"latitude": (22.60, 22.85), "longitude": (75.75, 75.95)}
 COMMUNITY_FEEDBACK = {
     "Awaiting confirmation",
     "Confirmed resolved",
@@ -91,10 +92,7 @@ def add_report(reports: pd.DataFrame, report: dict) -> pd.DataFrame:
         raise ValueError(f"Report ID already exists: {report_id}")
 
     normalized_report["report_id"] = normalized_id
-    for field, lower, upper in (
-        ("latitude", -90.0, 90.0),
-        ("longitude", -180.0, 180.0),
-    ):
+    for field, (lower, upper) in DEMO_COORDINATE_BOUNDS.items():
         value = report[field]
         if isinstance(value, bool):
             raise ValueError(f"{field} must be finite and between {lower:g} and {upper:g}.")

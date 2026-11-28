@@ -30,10 +30,12 @@ def _valid_report():
     [
         ("latitude", 90.01),
         ("latitude", -90.01),
+        ("latitude", 19.07),
         ("latitude", float("nan")),
         ("latitude", True),
         ("longitude", 180.01),
         ("longitude", -180.01),
+        ("longitude", -72.87),
         ("longitude", float("inf")),
         ("longitude", False),
     ],
@@ -55,6 +57,17 @@ def test_add_report_accepts_and_normalizes_numeric_coordinate_strings():
 
     assert added.iloc[0]["latitude"] == 22.72
     assert added.iloc[0]["longitude"] == 75.85
+
+
+def test_add_report_accepts_the_demo_area_coordinate_boundaries():
+    report = _valid_report()
+    report["latitude"] = 22.60
+    report["longitude"] = 75.95
+
+    added = add_report(load_reports(), report)
+
+    assert added.iloc[0]["latitude"] == 22.60
+    assert added.iloc[0]["longitude"] == 75.95
 
 @pytest.mark.parametrize("duplicate_id", ["RS-TEST", " rs-test ", "RS-TEST "])
 def test_add_report_rejects_ids_that_duplicate_after_trimming_and_casefolding(duplicate_id):
